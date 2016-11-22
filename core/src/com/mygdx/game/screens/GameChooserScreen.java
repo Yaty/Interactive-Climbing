@@ -18,7 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mygdx.game.ICGame;
-import com.mygdx.game.gameword.worlds.TouchMe;
+import com.mygdx.game.gameword.touchme.TouchMe;
 
 /**
  *

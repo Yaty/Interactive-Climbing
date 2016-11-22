@@ -1,0 +1,31 @@
+<?xml version = "1.0" encoding="UTF-8" standalone="yes" ?>
+<touchme>
+	<checkpoint>
+		<id>1</id>
+		<position>
+			<x>10</x>
+			<y>10</y>
+		</position>
+	</checkpoint>
+	<checkpoint>
+		<id>2</id>
+		<position>
+			<x>150</x>
+			<y>100</y>
+		</position>
+	</checkpoint>
+	<checkpoint>
+		<id>3</id>
+		<position>
+			<x>200</x>
+			<y>400</y>
+		</position>
+	</checkpoint>
+	<checkpoint>
+		<id>4</id>
+		<position>
+			<x>700</x>
+			<y>450</y>
+		</position>
+	</checkpoint>
+</touchme>

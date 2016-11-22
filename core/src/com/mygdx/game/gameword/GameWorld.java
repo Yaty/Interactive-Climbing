@@ -3,9 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mygdx.game.gameword.worlds;
+package com.mygdx.game.gameword;
 
-import com.mygdx.game.gameword.renderer.GameRenderer;
+import com.mygdx.game.ichelpers.touchme.CheckPoint;
+import java.util.ArrayList;
+import java.util.Date;
 
 /**
  *
@@ -13,6 +15,11 @@ import com.mygdx.game.gameword.renderer.GameRenderer;
  */
 public abstract class GameWorld {
     protected GameRenderer gameRenderer;
+    protected long timer; 
+    protected boolean started;
     public abstract void update(float delta);
     public abstract void dispose();
+    public abstract ArrayList<CheckPoint> getCheckPoints();
+    public abstract long getTimer();
+    public abstract boolean isStarted();
 }
