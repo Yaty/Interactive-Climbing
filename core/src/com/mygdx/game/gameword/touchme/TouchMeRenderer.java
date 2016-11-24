@@ -21,7 +21,7 @@ public class TouchMeRenderer extends GameRenderer {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(1, 1, 1, 1);
+        Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT );
         batch.begin();
         for(CheckPoint checkpoint : gameWorld.getCheckPoints()) {
@@ -29,11 +29,5 @@ public class TouchMeRenderer extends GameRenderer {
         }
         time.draw(batch, String.valueOf(((gameWorld.getTimer()-System.currentTimeMillis())/1000) % 60) + "s", Gdx.graphics.getWidth()-40, Gdx.graphics.getHeight()-10);
         batch.end();
-    }
-
-    @Override
-    public void dispose() {
-        batch.dispose();
-    }
-    
+    }   
 }

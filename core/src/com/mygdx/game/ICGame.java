@@ -11,8 +11,8 @@ public class ICGame extends Game {
 	@Override
 	public void create () {
             AssetLoader.load();
-            //setScreen(new MainMenuScreen(this));
-            setScreen(new GameScreen(new TouchMe()));
+            setScreen(new MainMenuScreen(this));
+            //setScreen(new GameScreen(new TouchMe()));
 	}
 
 	@Override

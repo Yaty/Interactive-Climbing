@@ -7,14 +7,12 @@ package com.mygdx.game.gameword;
 
 import com.mygdx.game.ichelpers.touchme.CheckPoint;
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  *
  * @author Alexis Clément, Hugo Da Roit, Benjamin Lévèque, Alexis Montagne
  */
 public abstract class GameWorld {
-    protected GameRenderer gameRenderer;
     protected long timer; 
     protected boolean started;
     public abstract void update(float delta);

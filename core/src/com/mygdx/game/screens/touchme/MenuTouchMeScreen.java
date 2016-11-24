@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mygdx.game.screens;
+package com.mygdx.game.screens.touchme;
 
-import com.mygdx.game.screens.touchme.MenuTouchMeScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -15,17 +14,32 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mygdx.game.ICGame;
 import com.mygdx.game.gameword.touchme.TouchMe;
+import com.mygdx.game.screens.GameChooserScreen;
+import com.mygdx.game.screens.GameScreen;
+import com.mygdx.game.screens.MainMenuScreen;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 /**
  *
- * @author Alexis Clément, Hugo Da Roit, Benjamin Lévèque, Alexis Montagne
+ * @author Hugo Da Roit - contact@hdaroit.fr
  */
-public class GameChooserScreen implements Screen {
+public class MenuTouchMeScreen implements Screen {
     private final ICGame game;  
     private final Stage stage;
     private Skin skin;
@@ -35,7 +49,7 @@ public class GameChooserScreen implements Screen {
      * @param game represente le jeu pour agir dessus (le lancer)
      */
     
-    public GameChooserScreen (ICGame game){
+    public MenuTouchMeScreen (ICGame game){
         this.game = game;        
         stage = new Stage();
         Gdx.input.setInputProcessor(stage); // Le stage va s'occuper des E/S
@@ -44,19 +58,43 @@ public class GameChooserScreen implements Screen {
     }
     
     private void createButtons() {
-        TextButton btnJeu1 = new TextButton("Jouer à Touch me !", skin);
-        btnJeu1.setPosition((Gdx.graphics.getWidth()/2)-(btnJeu1.getWidth()/2), (Gdx.graphics.getHeight()/2)-(btnJeu1.getHeight()/2) + 35);
-        btnJeu1.addListener(new ClickListener() {
+        TextButton btnInfos = new TextButton("Générer une partie", skin);
+        btnInfos.setPosition((Gdx.graphics.getWidth()/2)-(btnInfos.getWidth()/2), (Gdx.graphics.getHeight()/2)-(btnInfos.getHeight()/2));
+        btnInfos.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     dispose();
-                    game.setScreen(new MenuTouchMeScreen(game));
+                    game.setScreen(new GenererPartieTouchMeScreen(game));
                 };
         });   
+
+        File folder = new File(Gdx.files.internal("./TouchMe/").name());
+        File[] listOfFiles = folder.listFiles();
         
-        TextButton btnRetour = new TextButton("Retour", skin);
-        btnRetour.setPosition((Gdx.graphics.getWidth()/2)-(btnRetour.getWidth()/2), (Gdx.graphics.getHeight()/2)-(btnRetour.getHeight()/2) - 35);
-        btnRetour.addListener(new ClickListener() {
+        final ArrayList<String> listBox = new ArrayList();
+        for (File file : listOfFiles) {
+            if (file.isFile() && file.getName().contains(".xml")) {
+                listBox.add(file.getName());
+            }
+        }
+        final SelectBox selectBox = new SelectBox(new Skin(Gdx.files.internal("./skin/uiskin.json")));
+        selectBox.setItems(listBox);
+        selectBox.setWidth(100);
+        selectBox.setPosition((Gdx.graphics.getWidth()/2)-(selectBox.getWidth()/2), (Gdx.graphics.getHeight()/2)-(selectBox.getHeight()/2) + btnInfos.getHeight() + 70);
+        
+        TextButton btnChoixPartie = new TextButton("Choisir une partie existante", skin);
+        btnChoixPartie.setPosition((Gdx.graphics.getWidth()/2)-(btnChoixPartie.getWidth()/2), (Gdx.graphics.getHeight()/2)-(btnChoixPartie.getHeight()/2) + btnInfos.getHeight() + 20);
+        btnChoixPartie.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    dispose();
+                    game.setScreen(new GameScreen(new TouchMe(selectBox.getSelection().toString())));
+                };
+        });
+        
+        TextButton btnQuitter = new TextButton("Retour", skin);
+        btnQuitter.setPosition((Gdx.graphics.getWidth()/2)-(btnQuitter.getWidth()/2), (Gdx.graphics.getHeight()/2)-(btnQuitter.getHeight()/2) - btnInfos.getHeight() - 20);
+        btnQuitter.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     dispose();
@@ -64,8 +102,10 @@ public class GameChooserScreen implements Screen {
                 };
         });  
         
-        stage.addActor(btnJeu1);
-        stage.addActor(btnRetour);
+        stage.addActor(selectBox);
+        stage.addActor(btnChoixPartie);
+        stage.addActor(btnInfos);
+        stage.addActor(btnQuitter);
     }
     
     private void create() {     
@@ -124,5 +164,5 @@ public class GameChooserScreen implements Screen {
         stage.dispose();
         skin.dispose();
     }
-    
+     
 }

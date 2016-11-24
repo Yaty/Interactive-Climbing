@@ -29,8 +29,8 @@ public abstract class GameRenderer {
         this.batch = new SpriteBatch();
         this.wait = new BitmapFont();
         this.time = new BitmapFont();
-        wait.setColor(Color.BLACK);
-        time.setColor(Color.BLACK);
+        wait.setColor(Color.WHITE);
+        time.setColor(Color.WHITE);
         GlyphLayout waitLayout = new GlyphLayout();
         waitLayout.setText(wait, "Veuillez appuyer sur n'importe quelle touche pour lancer le jeu !");
         waitWidth = waitLayout.width;
@@ -40,12 +40,16 @@ public abstract class GameRenderer {
     public abstract void render(float delta);
     
     public void renderWait(float delta) {
-        Gdx.gl.glClearColor(1, 1, 1, 1);
+        Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT );
         batch.begin();
         wait.draw(batch, "Veuillez appuyer sur n'importe quelle touche pour lancer le jeu !", (Gdx.graphics.getWidth()/2)-(waitWidth/2), (Gdx.graphics.getHeight()/2)+(waitHeight/2));
         batch.end();
     }
     
-    public abstract void dispose();
+    public void dispose() {
+        batch.dispose();
+        wait.dispose();
+        time.dispose();
+    };
 }

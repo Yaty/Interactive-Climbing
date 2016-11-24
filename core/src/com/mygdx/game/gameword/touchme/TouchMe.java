@@ -27,9 +27,14 @@ import org.xml.sax.SAXException;
  */
 public class TouchMe extends GameWorld {
     private final ArrayList<CheckPoint> checkPoints;
+    private final TouchMeRenderer gameRenderer;
+    private String nomMap;
     
-    public TouchMe() {
+    public TouchMe(String nomMap) {
         this.gameRenderer = new TouchMeRenderer(this);
+        this.nomMap = nomMap;
+        nomMap.replace("[", "");
+        nomMap.replace("]", "");
         checkPoints = new ArrayList<CheckPoint>();
         fillCheckPoints();
         started = false;
@@ -45,7 +50,7 @@ public class TouchMe extends GameWorld {
                 Gdx.app.exit();
         } else {
             gameRenderer.renderWait(delta);
-            if(Gdx.input.isKeyPressed(Keys.ANY_KEY)) {
+            if(Gdx.input.isKeyPressed(Keys.ANY_KEY) || Gdx.input.isTouched()) {
                 this.timer = System.currentTimeMillis() + 20000;
                 started = true;
             }
@@ -62,7 +67,7 @@ public class TouchMe extends GameWorld {
         final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         try {
             final DocumentBuilder builder = factory.newDocumentBuilder();
-            final Document document = builder.parse(new File(Gdx.files.internal("./TouchMe/map1.xml").path()));
+            final Document document = builder.parse(new File(Gdx.files.internal("./TouchMe/" + nomMap).path()));
             final Element racine = document.getDocumentElement();
             final NodeList checkPointsNodes = racine.getChildNodes();
             for(int i = 0 ; i < checkPointsNodes.getLength() ; i++) {
