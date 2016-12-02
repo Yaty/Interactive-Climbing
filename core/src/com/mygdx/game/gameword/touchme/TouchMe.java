@@ -7,20 +7,10 @@ package com.mygdx.game.gameword.touchme;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.gameword.GameWorld;
 import com.mygdx.game.ichelpers.touchme.CheckPoint;
-import java.io.File;
-import java.io.IOException;
+import com.mygdx.game.ichelpers.touchme.SaveHandler;
 import java.util.ArrayList;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 /**
  * @author Hugo Da Roit
@@ -28,15 +18,19 @@ import org.xml.sax.SAXException;
 public class TouchMe extends GameWorld {
     private final ArrayList<CheckPoint> checkPoints;
     private final TouchMeRenderer gameRenderer;
-    private String nomMap;
+    private final SaveHandler sh;
+    private String path;
     
-    public TouchMe(String nomMap) {
+    public TouchMe(String path) {
         this.gameRenderer = new TouchMeRenderer(this);
-        this.nomMap = nomMap;
-        nomMap.replace("[", "");
-        nomMap.replace("]", "");
-        checkPoints = new ArrayList<CheckPoint>();
-        fillCheckPoints();
+        this.path = path;
+        sh = new SaveHandler();
+        checkPoints = sh.load(path);
+        if(checkPoints == null) {
+            Gdx.app.error("TouchMe", "Erreur lors du chargement.");
+            dispose();
+            Gdx.app.exit();
+        }     
         started = false;
     }
     
@@ -44,13 +38,14 @@ public class TouchMe extends GameWorld {
     public void update(float delta) {
         if(started) {
             gameRenderer.render(delta);
-            if(Gdx.input.isKeyJustPressed(Keys.SPACE))
+            // Just clicked existe pas
+            if(Gdx.input.isKeyJustPressed(Keys.SPACE) || Gdx.input.justTouched())
                 checkPoints.remove(0);
             if(timer <= System.currentTimeMillis() || checkPoints.isEmpty())
                 Gdx.app.exit();
         } else {
             gameRenderer.renderWait(delta);
-            if(Gdx.input.isKeyPressed(Keys.ANY_KEY) || Gdx.input.isTouched()) {
+            if(Gdx.input.isKeyPressed(Keys.ANY_KEY) || Gdx.input.justTouched()) {
                 this.timer = System.currentTimeMillis() + 20000;
                 started = true;
             }
@@ -60,33 +55,6 @@ public class TouchMe extends GameWorld {
     @Override
     public void dispose() {
         gameRenderer.dispose();
-    }
-
-    // Lecture d'un fichier XML contenant la position et l'identifiant des checkpoints, on mets tout dans une liste.
-    private void fillCheckPoints() {
-        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        try {
-            final DocumentBuilder builder = factory.newDocumentBuilder();
-            final Document document = builder.parse(new File(Gdx.files.internal("./TouchMe/" + nomMap).path()));
-            final Element racine = document.getDocumentElement();
-            final NodeList checkPointsNodes = racine.getChildNodes();
-            for(int i = 0 ; i < checkPointsNodes.getLength() ; i++) {
-                if(checkPointsNodes.item(i).getNodeType() == Node.ELEMENT_NODE) { // Pour chaque check points
-                    Element checkPointElement = (Element) checkPointsNodes.item(i);
-                    int id = Integer.parseInt(checkPointElement.getElementsByTagName("id").item(0).getTextContent());
-                    Element position = (Element) checkPointElement.getElementsByTagName("position").item(0);
-                    float x = Float.parseFloat(position.getElementsByTagName("x").item(0).getTextContent());
-                    float y = Float.parseFloat(position.getElementsByTagName("y").item(0).getTextContent());
-                    checkPoints.add(new CheckPoint(id, new Vector2(x, y)));
-                }
-            }
-        } catch (final ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (SAXException ex) {
-            ex.printStackTrace();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
     }
     
     @Override

@@ -14,26 +14,17 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mygdx.game.ICGame;
 import com.mygdx.game.gameword.touchme.TouchMe;
-import com.mygdx.game.screens.GameChooserScreen;
 import com.mygdx.game.screens.GameScreen;
 import com.mygdx.game.screens.MainMenuScreen;
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.FilenameFilter;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.stream.Stream;
 
 /**
  *
@@ -69,17 +60,21 @@ public class MenuTouchMeScreen implements Screen {
         });   
 
         File folder = new File(Gdx.files.internal("./TouchMe/").name());
-        File[] listOfFiles = folder.listFiles();
-        
-        final ArrayList<String> listBox = new ArrayList();
-        for (File file : listOfFiles) {
-            if (file.isFile() && file.getName().contains(".xml")) {
-                listBox.add(file.getName());
+        File[] listOfFiles = folder.listFiles(new FilenameFilter() {
+            @Override
+            public boolean accept(File folder, String name) {
+                return name.toLowerCase().endsWith(".xml");
             }
-        }
+        });
+        
+        String[] arrayFile = new String[listOfFiles.length];
+        for(int i = 0 ; i < listOfFiles.length ; i++) {
+            arrayFile[i] = listOfFiles[i].getName().replace(".xml", "");
+        }        
+        
         final SelectBox selectBox = new SelectBox(new Skin(Gdx.files.internal("./skin/uiskin.json")));
-        selectBox.setItems(listBox);
-        selectBox.setWidth(100);
+        selectBox.setItems((Object[]) arrayFile);
+        selectBox.setWidth(200);
         selectBox.setPosition((Gdx.graphics.getWidth()/2)-(selectBox.getWidth()/2), (Gdx.graphics.getHeight()/2)-(selectBox.getHeight()/2) + btnInfos.getHeight() + 70);
         
         TextButton btnChoixPartie = new TextButton("Choisir une partie existante", skin);
@@ -87,8 +82,13 @@ public class MenuTouchMeScreen implements Screen {
         btnChoixPartie.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    dispose();
-                    game.setScreen(new GameScreen(new TouchMe(selectBox.getSelection().toString())));
+                    if(selectBox.getSelected() != null) {
+                        dispose();
+                        String selection = selectBox.getSelected().toString().replace("[", "").replace("]", "");
+                        game.setScreen(new GameScreen(new TouchMe(selection + ".xml")));
+                    } else {
+                        // Ici afficher un messae d'erreur, on ne peut pas ne rien sélectionner
+                    }
                 };
         });
         
@@ -136,7 +136,7 @@ public class MenuTouchMeScreen implements Screen {
     
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(1, 1, 1, 1);
+        Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act();
         stage.draw();

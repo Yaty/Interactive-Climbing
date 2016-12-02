@@ -1,31 +1,21 @@
 <?xml version = "1.0" encoding="UTF-8" standalone="yes" ?>
 <touchme>
 	<checkpoint>
+		<id>0</id>
+		<position>
+			<x>430.0</x>
+			<y>284.0</y>
+			<hauteur>64.0</hauteur>
+			<largeur>64.0</largeur>
+		</position>
+	</checkpoint>
+	<checkpoint>
 		<id>1</id>
 		<position>
-			<x>10</x>
-			<y>10</y>
-		</position>
-	</checkpoint>
-	<checkpoint>
-		<id>2</id>
-		<position>
-			<x>150</x>
-			<y>100</y>
-		</position>
-	</checkpoint>
-	<checkpoint>
-		<id>3</id>
-		<position>
-			<x>200</x>
-			<y>400</y>
-		</position>
-	</checkpoint>
-	<checkpoint>
-		<id>4</id>
-		<position>
-			<x>700</x>
-			<y>450</y>
+			<x>509.0</x>
+			<y>290.0</y>
+			<hauteur>64.0</hauteur>
+			<largeur>64.0</largeur>
 		</position>
 	</checkpoint>
 </touchme>
