@@ -50,6 +50,5 @@ public abstract class GameRenderer {
     public void dispose() {
         wait.dispose();
         time.dispose();
-        batch.dispose();
     };
 }

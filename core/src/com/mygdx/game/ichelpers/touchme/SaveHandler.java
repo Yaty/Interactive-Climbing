@@ -14,11 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -79,7 +75,7 @@ public class SaveHandler {
         int max = 1;
         int choix = -1;
         for(int i = 0 ; i < listOfFiles.length ; i++) {
-            if(Integer.parseInt(listOfFiles[i].getName().replaceAll("[^0-9]", "")) > max) {
+            if(Integer.parseInt(listOfFiles[i].getName().replaceAll("[^0-9]", "")) >= max) {
                 max = Integer.parseInt(listOfFiles[i].getName().replaceAll("[^0-9]", ""));
                 choix = i;
             }
